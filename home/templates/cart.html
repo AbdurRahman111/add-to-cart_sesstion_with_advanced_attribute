@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Cart - Our commercer{% endblock %}
+
+{% block body %}
+
+
+
+<h2 class="text-center" style="margin-top:20px; margin-bottom:18px;">My Cart</h2>
+
+
+<table class="table text-center container" style="">
+  <thead>
+    <tr>
+      <th scope="col" style="width:20%;">Name</th>
+      <th scope="col" style="width:8%;">Image</th>
+      <th scope="col" style="width:12%;">Color</th>
+      <th scope="col" style="width:12%;">Size</th>
+      <th scope="col" style="width:9%;">Embroidery</th>
+      <th scope="col" style="width:10%;">Quantity</th>
+      <th scope="col" style="width:19%;">Single Price</th>
+      <th scope="col" style="width:23%;">Quantity x Single Price</th>
+      <th scope="col" style="width:7%;">Remove</th>
+    </tr>
+
+
+  </thead>
+  <tbody id="">
+    {% for key, value in request.session.CartTotal.items %}
+    <tr>
+        <th scope="row"><a href="/product_details/{{ value.1.0 }}">{{ value.1.1 }}</a></th>
+        <td><img src="{{ value.1.2 }}" class="img-fluid" alt="..."></td>
+        <td>{{ value.2.1 }}</td>
+        <td>{{ value.3.1 }}</td>
+        <td>{{ value.4.1 }}</td>
+        <td>
+            <form action="{% url 'decrease_item' %}" method="POST">{% csrf_token %}
+                <input type="hidden" name="cart_item_id" value="{{ key }}">
+                <button class="btn btn-warning btn-sm">-</button>
+            </form>
+            ( <span id="valqty${cart_uid}">{{ value.5 }}</span> )
+            <form action="{% url 'increase_item' %}" method="POST">{% csrf_token %}
+                <input type="hidden" name="cart_item_id" value="{{ key }}">
+                <button class="btn btn-warning btn-sm">+</button>
+            </form>
+        </td>
+        <td>$ {{ value.6 }}</td>
+        <td>$ {{ value.7 }}</td>
+        <td>
+            <form action="{% url 'delete_item' %}" method="POST">{% csrf_token %}
+                <input type="hidden" name="cart_item_id" value="{{ key }}">
+                <button class="btn " type="submit"><i class="fa fa-trash-o" style="color:red;" onclick="remove_item_cart('${cart_uid}')"></i></button>
+            </form>
+
+        </td>
+      </tr>
+    <tr>
+    {% endfor %}
+      <th scope="row"></th>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><b>Total</b></td>
+      <td><b>$ {{ request.session.total_price }}</b></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+
+<script>
+
+</script>
+
+
+
+{% endblock %}
